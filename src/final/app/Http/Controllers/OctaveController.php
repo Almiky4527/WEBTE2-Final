@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
+
 class OctaveController extends Controller
 {
     private function validate_token($token): bool
@@ -86,7 +87,11 @@ class OctaveController extends Controller
             // $tempFile
         ]);
 
-        $process->setTimeout(10);
+        $process->setTimeout(30);
+
+        $configuredSleepUS = config('octave.sleep_us');
+
+        usleep($configuredSleepUS);
 
         try {
             $process->run();
