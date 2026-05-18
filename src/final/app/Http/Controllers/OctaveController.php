@@ -52,13 +52,15 @@ class OctaveController extends Controller
      */
     public function evaluate(Request $request)
     {
-        $request->validate([
+        $fields = $request->validate([
             'token' => 'required|string|max:256',
             'code' => 'required|string|max:5000',
         ]);
 
-        $token = $request->input('token');
-        $code = $request->input('code') . "\nexit(0);\n";
+        // $token = $request->input('token');
+        // $code = $request->input('code') . "\nexit(0);\n";
+        $token = $fields['token'];
+        $code = $fields['code'] . "\nexit(0);\n";
 
         if ( !$this->validate_token($token) )
             // Token validation failed
