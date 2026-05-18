@@ -61,6 +61,7 @@ class OctaveController extends Controller
         $code = $request->input('code') . "\nexit(0);\n";
 
         if ( !$this->validate_token($token) )
+            // Token validation failed
             return response()->json([
                 'code' => 401,
                 'success' => false,
@@ -68,15 +69,13 @@ class OctaveController extends Controller
             ], 401);
 
         if ( !$this->validate_code($code) )
+            // Trying to pass forbidden commands to octave
             return response()->json([
                 'code' => 403,
                 'success' => false,
                 'error' => 'Forbidden command detected'
             ], 403);
 
-        // Create temporary script
-        // $tempFile = tempnam(sys_get_temp_dir(), 'oct_') . '.m';
-        // file_put_contents($tempFile, $code);
 
         $process = new Process([
             'octave',
@@ -84,7 +83,6 @@ class OctaveController extends Controller
             '--no-gui',
             '--eval',
             $code,
-            // $tempFile
         ]);
 
         $process->setTimeout(30);
@@ -100,8 +98,7 @@ class OctaveController extends Controller
             $error = $process->getErrorOutput();
             $error = $this->remove_octave_shutdown_error($error);
 
-            // unlink($tempFile);
-
+            // Octave command sccessfully evaluated
             return response()->json([
                 'code' => 200,
                 'success' => true,
@@ -111,10 +108,7 @@ class OctaveController extends Controller
 
         } catch (\Exception $e) {
 
-            // if (file_exists($tempFile)) {
-            //     unlink($tempFile);
-            // }
-
+            // Something went wrong in the server
             return response()->json([
                 'code' => 500,
                 'success' => false,
