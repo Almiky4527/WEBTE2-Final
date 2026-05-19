@@ -9,12 +9,12 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class OctaveController extends Controller
 {
-    private function validate_token($token): bool
-    {
-        $configuredToken = config('octave.api_token');
-        
-        return $token === $configuredToken;
-    }
+    // private function validate_token($token): bool
+    // {
+    //     $configuredToken = config('octave.api_token');
+    //     
+    //     return $token === $configuredToken;
+    // }
 
     private function validate_code($code): bool
     {
