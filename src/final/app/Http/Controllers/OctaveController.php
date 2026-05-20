@@ -9,13 +9,6 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class OctaveController extends Controller
 {
-    // private function validate_token($token): bool
-    // {
-    //     $configuredToken = config('octave.api_token');
-    //     
-    //     return $token === $configuredToken;
-    // }
-
     private function validate_code($code): bool
     {
         // Optional: basic security filtering
@@ -60,7 +53,7 @@ class OctaveController extends Controller
         // $token = $request->input('token');
         // $code = $request->input('code') . "\nexit(0);\n";
         $token = $fields['token'];
-        $code = $fields['code'] . "\nexit(0);\n";
+        $code = "pkg load control;" . $fields['code'] . ";exit(0);";
 
         if ( !$this->validate_token($token) )
             // Token validation failed

@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     nano \
     curl \
     octave \
+    octave-control \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
