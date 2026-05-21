@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AnimController;
 use App\Http\Controllers\OctaveController;
+use App\Http\Middleware\LogAnimStats;
 use App\Http\Middleware\LogOctaveApi;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +21,9 @@ Route::prefix('api/octave')->name('octave.')->group(function () {
     Route::post('eval', [OctaveController::class, 'evaluate'])
         ->middleware(LogOctaveApi::class)
         ->name('evaluate');
+
+    Route::get('ball', [AnimController::class, 'run_ball'])
+        ->middleware(LogAnimStats::class)->name('ball');
+    Route::get('pendulum', [AnimController::class, 'run_pendulum'])
+        ->middleware(LogAnimStats::class)->name('pendulum');
 });

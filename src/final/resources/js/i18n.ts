@@ -58,6 +58,26 @@ const messages = {
                 server: 'Chyba servera.',
             },
         },
+        anim: {
+            parameters: 'Parametre',
+            initial: 'Počiatočné podmienky / čas',
+            refInput: 'Referenčný vstup',
+            simulate: 'Simulovať',
+            running: 'Počíta sa…',
+            play: 'Prehrať',
+            pause: 'Pauza',
+            reset: 'Reset',
+            speed: 'Rýchlosť',
+            noData: 'Spustite simuláciu pre zobrazenie animácie a grafu.',
+            pendulum: {
+                cartPos: 'Pozícia vozíka [m]',
+                angle: 'Uhol kyvadla [rad]',
+            },
+            ball: {
+                position: 'Pozícia guľôčky [m]',
+                beamAngle: 'Uhol tyče [rad]',
+            },
+        },
         nav: {
             platform: 'Platforma',
             console: 'Konzola',
@@ -145,6 +165,26 @@ const messages = {
                 forbidden: 'Forbidden command detected.',
                 invalidWorkspace: 'Workspace was corrupted and has been reset.',
                 server: 'Server error.',
+            },
+        },
+        anim: {
+            parameters: 'Parameters',
+            initial: 'Initial conditions / time',
+            refInput: 'Reference input',
+            simulate: 'Simulate',
+            running: 'Running…',
+            play: 'Play',
+            pause: 'Pause',
+            reset: 'Reset',
+            speed: 'Speed',
+            noData: 'Run a simulation to see the animation and chart.',
+            pendulum: {
+                cartPos: 'Cart position [m]',
+                angle: 'Pendulum angle [rad]',
+            },
+            ball: {
+                position: 'Ball position [m]',
+                beamAngle: 'Beam angle [rad]',
             },
         },
         nav: {
