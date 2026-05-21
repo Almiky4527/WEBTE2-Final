@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Lock, LockOpen } from 'lucide-vue-next'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import UnlockDialog from '@/components/octave/UnlockDialog.vue'
 import { Button } from '@/components/ui/button'
@@ -11,17 +11,29 @@ const { unlocked, clearLock, refreshStatus } = useOctaveUnlock()
 
 const dialogOpen = ref(false)
 
+function onVisibility() {
+    if (document.visibilityState === 'visible') {
+        refreshStatus()
+    }
+}
+
 onMounted(() => {
     refreshStatus()
+    document.addEventListener('visibilitychange', onVisibility)
+})
+
+onBeforeUnmount(() => {
+    document.removeEventListener('visibilitychange', onVisibility)
 })
 
 const title = computed(() =>
     unlocked.value ? t('octave.lockIndicator.unlocked') : t('octave.lockIndicator.locked'),
 )
 
-function onClick() {
+async function onClick() {
     if (unlocked.value) {
-        clearLock()
+        await clearLock()
+        window.dispatchEvent(new CustomEvent('octave:locked'))
     } else {
         dialogOpen.value = true
     }

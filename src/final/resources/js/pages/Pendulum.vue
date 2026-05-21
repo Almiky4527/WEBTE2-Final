@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
-import { computed, onBeforeUnmount, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PendulumScene from '@/components/anim/PendulumScene.vue'
 import PlaybackControls from '@/components/anim/PlaybackControls.vue'
@@ -27,7 +27,7 @@ const params = reactive({
     dt: 0.05,
 })
 
-const { run, loading, series, errorMsg } = useAnimSim('/api/octave/pendulum')
+const { run, loading, series, errorMsg, clearSeries } = useAnimSim('/api/octave/pendulum')
 const unlockOpen = ref(false)
 let pendingSubmit = false
 
@@ -174,7 +174,18 @@ function onUnlockCancel() {
     pendingSubmit = false
 }
 
-onBeforeUnmount(() => cancelAnimationFrame(raf))
+function onAppLocked() {
+    playing.value = false
+    cancelAnimationFrame(raf)
+    currentIndex.value = 0
+    clearSeries()
+}
+
+onMounted(() => window.addEventListener('octave:locked', onAppLocked))
+onBeforeUnmount(() => {
+    cancelAnimationFrame(raf)
+    window.removeEventListener('octave:locked', onAppLocked)
+})
 
 const idx = computed(() => {
     const i = Math.round(currentIndex.value)

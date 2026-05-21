@@ -26,10 +26,14 @@ function toQuery(params: Record<string, number>): string {
 }
 
 export function useAnimSim(endpoint: '/api/octave/ball' | '/api/octave/pendulum') {
-    const { markLocked, unlocked } = useOctaveUnlock()
+    const { markLocked, unlocked, refreshStatus } = useOctaveUnlock()
     const loading = ref(false)
     const series = ref<AnimSeries | null>(null)
     const errorMsg = ref<string>('')
+
+    function clearSeries() {
+        series.value = null
+    }
 
     async function run(params: Record<string, number>): Promise<AnimRunResult> {
         loading.value = true
@@ -73,5 +77,5 @@ export function useAnimSim(endpoint: '/api/octave/ball' | '/api/octave/pendulum'
         }
     }
 
-    return { run, loading, series, errorMsg }
+    return { run, loading, series, errorMsg, clearSeries, refreshStatus }
 }

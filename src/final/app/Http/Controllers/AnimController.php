@@ -94,9 +94,9 @@ class AnimController extends Controller
             D = [0];
             K = place(A,B,[-2+2i,-2-2i,-20,-80]);
             N = -inv(C*inv(A-B*K)*B);
-            sys = ss(A-B*K,B,C,D);
+            sys = ss(A-B*K, B*N, C, D);
             t = 0:dt:t_end;
-            [y,t,x] = lsim(N*sys, r_ref*ones(size(t)), t, [pos0;0;angle0;0]);
+            [y,t,x] = lsim(sys, r_ref*ones(size(t)), t, [pos0;0;angle0;0]);
             result = struct('t', t(:)', 'y', y, 'x', x);
             disp(jsonencode(result));
         OCT;
