@@ -24,6 +24,42 @@ const messages = {
             english: 'Angličtina',
             save: 'Uložiť',
             cancel: 'Zrušiť',
+            close: 'Zavrieť',
+        },
+        stats: {
+            summary: {
+                title: 'Prehľad',
+                loading: 'Načítava sa…',
+                runs: 'spustení',
+            },
+            detail: {
+                title: 'Detail: {name}',
+                loading: 'Načítavajú sa záznamy…',
+                empty: 'Žiadne záznamy.',
+                col: {
+                    time: 'Čas',
+                    city: 'Mesto',
+                    country: 'Krajina',
+                },
+            },
+            anim: {
+                ball: 'Gulička a tyč',
+                pendulum: 'Kyvadlo',
+            },
+            logs: {
+                title: 'Prehľad záznamov',
+                description: 'Záznamy volaní Octave REST API.',
+                download: 'Stiahnuť CSV',
+                loading: 'Načítavajú sa záznamy…',
+                empty: 'Žiadne záznamy.',
+                lockedHint: 'Pre zobrazenie záznamov odomknite aplikáciu.',
+                col: {
+                    time: 'Čas',
+                    code: 'Kód',
+                    success: 'Úspech',
+                    error: 'Chyba',
+                },
+            },
         },
         octave: {
             lockIndicator: {
@@ -137,6 +173,42 @@ const messages = {
             english: 'English',
             save: 'Save',
             cancel: 'Cancel',
+            close: 'Close',
+        },
+        stats: {
+            summary: {
+                title: 'Overview',
+                loading: 'Loading…',
+                runs: 'runs',
+            },
+            detail: {
+                title: 'Detail: {name}',
+                loading: 'Loading records…',
+                empty: 'No records.',
+                col: {
+                    time: 'Time',
+                    city: 'City',
+                    country: 'Country',
+                },
+            },
+            anim: {
+                ball: 'Ball & Beam',
+                pendulum: 'Pendulum',
+            },
+            logs: {
+                title: 'Log records',
+                description: 'Octave REST API call records.',
+                download: 'Download CSV',
+                loading: 'Loading records…',
+                empty: 'No records.',
+                lockedHint: 'Unlock the application to view records.',
+                col: {
+                    time: 'Time',
+                    code: 'Code',
+                    success: 'Success',
+                    error: 'Error',
+                },
+            },
         },
         octave: {
             lockIndicator: {

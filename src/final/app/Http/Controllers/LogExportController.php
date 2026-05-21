@@ -7,45 +7,72 @@ use App\Models\OctaveLog;
 
 class LogExportController extends Controller
 {
+    private function ensureUnlocked(Request $request): bool
+    {
+        return (bool) $request->session()->get('octave_unlocked', false);
+    }
+
+    /**
+     * Return recent logs of octave REST API usage as JSON.
+     */
+    public function index(Request $request)
+    {
+        if (!$this->ensureUnlocked($request)) {
+            return response()->json([
+                'success' => false,
+                'error'   => 'Console is locked',
+            ], 401);
+        }
+
+        $rows = OctaveLog::query()
+            ->orderByDesc('id')
+            ->limit(500)
+            ->get(['id', 'code', 'success', 'error', 'created_at'])
+            ->map(function ($log) {
+                return [
+                    'id'         => $log->id,
+                    'code'       => $log->code,
+                    'success'    => (bool) $log->success,
+                    'error'      => $log->error,
+                    'created_at' => optional($log->created_at)->toIso8601String(),
+                ];
+            });
+
+        return response()->json([
+            'rows' => $rows,
+        ]);
+    }
+
     /**
      * Export logs of octave REST API usage to CSV
      */
     public function export_logs(Request $request)
     {
-        $fields = $request->validate([
-            'token' => 'required|string|max:256',
-        ]);
-
-        $token = $fields['token'];
-
-        if ( !$this->validate_token($token) )
-            // Token validation failed
+        if (!$this->ensureUnlocked($request)) {
             return response()->json([
-                'code' => 401,
                 'success' => false,
-                'error' => 'Invalid authentication token'
+                'error'   => 'Console is locked',
             ], 401);
+        }
 
         $fileName = 'logs.csv';
 
         $headers = [
-            'Content-Type' => 'text/csv',
+            'Content-Type'        => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
         ];
 
         $callback = function () {
             $file = fopen('php://output', 'w');
 
-            // CSV header row
             fputcsv($file, [
                 'ID',
                 'Code',
                 'Success',
                 'Error',
-                'Created'
+                'Created',
             ]);
 
-            // Data rows
             OctaveLog::chunk(1000, function ($logs) use ($file) {
                 foreach ($logs as $log) {
                     fputcsv($file, [

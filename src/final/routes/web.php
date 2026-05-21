@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnimController;
+use App\Http\Controllers\LogExportController;
 use App\Http\Controllers\OctaveController;
 use App\Http\Middleware\LogAnimStats;
 use App\Http\Middleware\LogOctaveApi;
@@ -23,6 +24,9 @@ Route::prefix('api/octave')->name('octave.')->group(function () {
     Route::post('eval', [OctaveController::class, 'evaluate'])
         ->middleware(LogOctaveApi::class)
         ->name('evaluate');
+
+    Route::get('logs', [LogExportController::class, 'index'])->name('logs.index');
+    Route::get('logs.csv', [LogExportController::class, 'export_logs'])->name('logs.csv');
 
     Route::get('ball', [AnimController::class, 'run_ball'])
         ->middleware(LogAnimStats::class)->name('ball');

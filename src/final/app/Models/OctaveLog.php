@@ -13,4 +13,9 @@ class OctaveLog extends Model
         'success',
         'error',
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'success'    => 'boolean',
+    ];
 }
