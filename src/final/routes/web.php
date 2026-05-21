@@ -18,6 +18,8 @@ Route::inertia('api-docs', 'ApiDocs')->name('api-docs');
 // web routes so they get session middleware (httpOnly cookie unlock flag).
 Route::prefix('api/octave')->name('octave.')->group(function () {
     Route::post('unlock', [OctaveController::class, 'unlock'])->name('unlock');
+    Route::post('lock', [OctaveController::class, 'lock'])->name('lock');
+    Route::get('status', [OctaveController::class, 'status'])->name('status');
     Route::post('eval', [OctaveController::class, 'evaluate'])
         ->middleware(LogOctaveApi::class)
         ->name('evaluate');

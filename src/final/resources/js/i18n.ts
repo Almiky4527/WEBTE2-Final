@@ -26,6 +26,10 @@ const messages = {
             cancel: 'Zrušiť',
         },
         octave: {
+            lockIndicator: {
+                locked: 'Aplikácia je zamknutá — kliknite pre odomknutie',
+                unlocked: 'Aplikácia je odomknutá — kliknite pre zamknutie',
+            },
             unlockDialog: {
                 title: 'Odomknúť konzolu',
                 description: 'Zadajte heslo. Pri zhode server odomkne konzolu v rámci tejto session.',
@@ -135,6 +139,10 @@ const messages = {
             cancel: 'Cancel',
         },
         octave: {
+            lockIndicator: {
+                locked: 'Application is locked — click to unlock',
+                unlocked: 'Application is unlocked — click to lock',
+            },
             unlockDialog: {
                 title: 'Unlock console',
                 description: 'Enter the password. On match the server unlocks the console for this session.',

@@ -40,6 +40,26 @@ class OctaveController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Clear the unlock flag so the next eval/anim call requires the password again.
+     */
+    public function lock(Request $request)
+    {
+        $request->session()->forget('octave_unlocked');
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Return the current unlock state so the UI can sync after a fresh load.
+     */
+    public function status(Request $request)
+    {
+        return response()->json([
+            'unlocked' => (bool) $request->session()->get('octave_unlocked', false),
+        ]);
+    }
+
     private function validate_code($code): bool
     {
         // Optional: basic security filtering

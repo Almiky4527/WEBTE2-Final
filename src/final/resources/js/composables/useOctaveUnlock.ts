@@ -32,9 +32,45 @@ export function useOctaveUnlock() {
         unlocked.value = false
     }
 
+    async function clearLock(): Promise<void> {
+        try {
+            await fetch('/api/octave/lock', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { Accept: 'application/json' },
+            })
+        } finally {
+            unlocked.value = false
+        }
+    }
+
+    async function refreshStatus(): Promise<void> {
+        try {
+            const resp = await fetch('/api/octave/status', {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: { Accept: 'application/json' },
+            })
+
+            if (!resp.ok) {
+return
+}
+
+            const data = await resp.json().catch(() => null)
+
+            if (data && typeof data.unlocked === 'boolean') {
+                unlocked.value = data.unlocked
+            }
+        } catch {
+            // ignore network errors; cached flag stays as-is
+        }
+    }
+
     return {
         unlocked,
         attemptUnlock,
         markLocked,
+        clearLock,
+        refreshStatus,
     }
 }

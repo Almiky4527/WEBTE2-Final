@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
+import LockIndicator from '@/components/LockIndicator.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem } from '@/types';
 
@@ -23,7 +24,8 @@ withDefaults(
             <template v-if="breadcrumbs && breadcrumbs.length > 0">
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
             </template>
-            <div class="ml-auto">
+            <div class="ml-auto flex items-center gap-1">
+                <LockIndicator />
                 <LocaleSwitcher />
             </div>
         </div>
