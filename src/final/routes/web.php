@@ -1,14 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
 
-Route::inertia('/', 'Welcome', [
-    'canRegister' => Features::enabled(Features::registration()),
-])->name('home');
+Route::inertia('/', 'Welcome')->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
-});
-
-require __DIR__.'/settings.php';
+Route::inertia('console', 'Console')->name('console');
+Route::inertia('pendulum', 'Pendulum')->name('pendulum');
+Route::inertia('ball-beam', 'BallBeam')->name('ball-beam');
+Route::inertia('stats', 'Stats')->name('stats');
+Route::inertia('api-docs', 'ApiDocs')->name('api-docs');
