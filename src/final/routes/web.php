@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnimController;
+use App\Http\Controllers\ApiDocsController;
 use App\Http\Controllers\LogExportController;
 use App\Http\Controllers\OctaveController;
 use App\Http\Middleware\LogAnimStats;
@@ -14,6 +15,11 @@ Route::inertia('pendulum', 'Pendulum')->name('pendulum');
 Route::inertia('ball-beam', 'BallBeam')->name('ball-beam');
 Route::inertia('stats', 'Stats')->name('stats');
 Route::inertia('api-docs', 'ApiDocs')->name('api-docs');
+
+Route::prefix('api')->name('api.docs.')->group(function () {
+    Route::get('docs.yaml', [ApiDocsController::class, 'yaml'])->name('yaml');
+    Route::get('docs.pdf', [ApiDocsController::class, 'pdf'])->name('pdf');
+});
 
 // Octave console endpoints — kept under /api/octave URL prefix but defined in
 // web routes so they get session middleware (httpOnly cookie unlock flag).

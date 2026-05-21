@@ -147,7 +147,10 @@ const messages = {
             },
             apiDocs: {
                 title: 'API dokumentácia',
-                description: 'Prehliadač OpenAPI.',
+                description: 'Interaktívny prehliadač OpenAPI špecifikácie.',
+                downloadPdf: 'Stiahnuť PDF',
+                downloadYaml: 'Stiahnuť YAML',
+                loading: 'Načítava sa dokumentácia…',
             },
             welcome: {
                 brand: 'WEBTE2 — CAS Simulátor',
@@ -296,7 +299,10 @@ const messages = {
             },
             apiDocs: {
                 title: 'API Docs',
-                description: 'OpenAPI viewer.',
+                description: 'Interactive OpenAPI specification viewer.',
+                downloadPdf: 'Download PDF',
+                downloadYaml: 'Download YAML',
+                loading: 'Loading documentation…',
             },
             welcome: {
                 brand: 'WEBTE2 — CAS Simulator',

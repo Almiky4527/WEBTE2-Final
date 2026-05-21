@@ -1,0 +1,333 @@
+openapi: 3.1.0
+info:
+  title: WEBTE2 — CAS Simulator API
+  version: 1.0.0
+  description: |
+    REST API pre prácu s Octave CAS konzolou, simuláciami (kyvadlo,
+    gulička a tyč), záznamami volaní a štatistikami používania.
+
+    Väčšina koncových bodov vyžaduje odomknutú reláciu (cookie
+    `octave_unlocked=true`), ktorá sa získava cez `POST /api/octave/unlock`.
+servers:
+  - url: http://localhost:8080
+    description: Lokálny vývojový server
+  - url: /
+    description: Aktuálny host
+
+tags:
+  - name: Octave
+    description: CAS konzola — odomykanie a vyhodnocovanie príkazov.
+  - name: Animations
+    description: Simulácie dynamických systémov.
+  - name: Logs
+    description: Záznamy REST volaní konzoly.
+  - name: Stats
+    description: Štatistiky používania simulácií.
+
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: laravel_session
+      description: |
+        Laravel session cookie. Endpointy chránené sessionou vyžadujú,
+        aby session obsahovala príznak `octave_unlocked=true`
+        (nastavený cez `POST /api/octave/unlock`).
+  schemas:
+    Error:
+      type: object
+      required: [success, error]
+      properties:
+        success: { type: boolean, example: false }
+        error:   { type: string, example: Console is locked }
+        code:    { type: integer, example: 401 }
+    UnlockRequest:
+      type: object
+      required: [password]
+      properties:
+        password:
+          type: string
+          maxLength: 128
+          example: secret
+    UnlockResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        error:   { type: string }
+    StatusResponse:
+      type: object
+      properties:
+        unlocked: { type: boolean }
+    EvalRequest:
+      type: object
+      required: [code]
+      properties:
+        code:
+          type: string
+          maxLength: 5000
+          description: Octave kód na vyhodnotenie.
+          example: "x = 1:5; disp(sum(x))"
+        workspace:
+          type: string
+          nullable: true
+          maxLength: 1048576
+          description: Workspace vo formáte `save('-text', ...)` (musí začínať `# Created by Octave`).
+    EvalResponse:
+      type: object
+      properties:
+        code:      { type: integer, example: 200 }
+        success:   { type: boolean }
+        output:    { type: string, description: "stdout z octave" }
+        stderr:    { type: string, description: "stderr (vyfiltrovaný šum)" }
+        workspace: { type: string, description: "Aktuálny workspace v `save('-text')` formáte." }
+        figure:    { type: string, description: "Base64 PNG ak boli vytvorené obrázky, inak prázdny." }
+    BallSeriesResponse:
+      type: object
+      required: [success, t, y, x]
+      properties:
+        success: { type: boolean }
+        t:
+          type: array
+          items: { type: number }
+          description: Časové vzorky.
+        y:
+          oneOf:
+            - { type: array, items: { type: number } }
+            - { type: array, items: { type: array, items: { type: number } } }
+          description: Výstupy systému (pozícia guľôčky).
+        x:
+          type: array
+          items: { type: array, items: { type: number } }
+          description: Vnútorné stavy (pozícia, rýchlosť, uhol, uhlová rýchlosť).
+    PendulumSeriesResponse:
+      allOf:
+        - $ref: '#/components/schemas/BallSeriesResponse'
+        - description: "To isté čo BallSeries, ale `y` obsahuje [pozícia vozíka, uhol kyvadla]."
+    LogRow:
+      type: object
+      properties:
+        id:         { type: integer }
+        code:       { type: string }
+        success:    { type: boolean }
+        error:      { type: string, nullable: true }
+        created_at: { type: string, format: date-time, nullable: true }
+    LogsResponse:
+      type: object
+      properties:
+        rows:
+          type: array
+          items: { $ref: '#/components/schemas/LogRow' }
+    StatsSummaryItem:
+      type: object
+      properties:
+        anim:  { type: string, enum: [ball, pendulum] }
+        count: { type: integer }
+    StatsSummaryResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/StatsSummaryItem' }
+    StatsDetailRow:
+      type: object
+      properties:
+        created_at: { type: string, format: date-time, nullable: true }
+        city:       { type: string, nullable: true }
+        country:    { type: string, nullable: true }
+    StatsDetailResponse:
+      type: object
+      properties:
+        anim: { type: string }
+        rows:
+          type: array
+          items: { $ref: '#/components/schemas/StatsDetailRow' }
+  responses:
+    Unauthorized:
+      description: Konzola je zamknutá.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Detegovaný zakázaný príkaz.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    ValidationError:
+      description: Neplatné vstupné parametre.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message: { type: string }
+              errors:  { type: object, additionalProperties: { type: array, items: { type: string } } }
+
+paths:
+  /api/octave/unlock:
+    post:
+      tags: [Octave]
+      summary: Odomkne konzolu v rámci aktuálnej session.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UnlockRequest' }
+      responses:
+        '200':
+          description: Úspešné odomknutie.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UnlockResponse' }
+        '401':
+          description: Nesprávne heslo.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UnlockResponse' }
+  /api/octave/lock:
+    post:
+      tags: [Octave]
+      summary: Zamkne konzolu (vyčistí session príznak).
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/UnlockResponse' }
+  /api/octave/status:
+    get:
+      tags: [Octave]
+      summary: Vráti aktuálny stav odomknutia.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StatusResponse' }
+  /api/octave/eval:
+    post:
+      tags: [Octave]
+      summary: Vyhodnotí Octave kód v izolovanom procese.
+      security: [{ sessionCookie: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EvalRequest' }
+      responses:
+        '200':
+          description: Výstup vyhodnotenia.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EvalResponse' }
+        '400':
+          description: Neplatný workspace formát.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /api/octave/ball:
+    get:
+      tags: [Animations]
+      summary: Simulácia gulička-tyč.
+      description: Vráti časové rady stavov a výstupov pre regulovaný systém gulička na tyči.
+      security: [{ sessionCookie: [] }]
+      parameters:
+        - { in: query, name: m,      required: true,  schema: { type: number }, description: "Hmotnosť guľôčky [kg]." }
+        - { in: query, name: R,      required: true,  schema: { type: number }, description: "Polomer guľôčky [m]." }
+        - { in: query, name: g,      required: true,  schema: { type: number }, description: "Gravitácia [m/s^2]." }
+        - { in: query, name: J,      required: true,  schema: { type: number }, description: "Moment zotrvačnosti guľôčky [kg·m^2]." }
+        - { in: query, name: r,      required: false, schema: { type: number, default: 0.25 }, description: "Referenčná pozícia." }
+        - { in: query, name: pos0,   required: false, schema: { type: number, default: 0.0 },  description: "Počiatočná pozícia." }
+        - { in: query, name: angle0, required: false, schema: { type: number, default: 0.0 },  description: "Počiatočný uhol." }
+        - { in: query, name: t_end,  required: false, schema: { type: number, minimum: 0.1, maximum: 30, default: 5.0 }, description: "Koniec simulácie [s]." }
+        - { in: query, name: dt,     required: false, schema: { type: number, minimum: 0.005, maximum: 0.5, default: 0.02 }, description: "Vzorkovací krok [s]." }
+      responses:
+        '200':
+          description: Časové rady.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BallSeriesResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /api/octave/pendulum:
+    get:
+      tags: [Animations]
+      summary: Simulácia obráteného kyvadla na vozíku.
+      security: [{ sessionCookie: [] }]
+      parameters:
+        - { in: query, name: M,      required: true,  schema: { type: number }, description: "Hmotnosť vozíka [kg]." }
+        - { in: query, name: m,      required: true,  schema: { type: number }, description: "Hmotnosť kyvadla [kg]." }
+        - { in: query, name: b,      required: true,  schema: { type: number }, description: "Trenie vozíka." }
+        - { in: query, name: I,      required: true,  schema: { type: number }, description: "Moment zotrvačnosti kyvadla." }
+        - { in: query, name: g,      required: true,  schema: { type: number }, description: "Gravitácia." }
+        - { in: query, name: l,      required: true,  schema: { type: number }, description: "Dĺžka kyvadla po ťažisko." }
+        - { in: query, name: r,      required: false, schema: { type: number, default: 0.2 } }
+        - { in: query, name: pos0,   required: false, schema: { type: number, default: 0.0 } }
+        - { in: query, name: angle0, required: false, schema: { type: number, default: 0.0 } }
+        - { in: query, name: t_end,  required: false, schema: { type: number, minimum: 0.1, maximum: 60, default: 10.0 } }
+        - { in: query, name: dt,     required: false, schema: { type: number, minimum: 0.005, maximum: 0.5, default: 0.05 } }
+      responses:
+        '200':
+          description: Časové rady.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PendulumSeriesResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /api/octave/logs:
+    get:
+      tags: [Logs]
+      summary: Vráti posledných 500 záznamov volaní eval API.
+      security: [{ sessionCookie: [] }]
+      responses:
+        '200':
+          description: Záznamy.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LogsResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/octave/logs.csv:
+    get:
+      tags: [Logs]
+      summary: Export záznamov ako CSV.
+      security: [{ sessionCookie: [] }]
+      responses:
+        '200':
+          description: CSV súbor.
+          content:
+            text/csv:
+              schema: { type: string, format: binary }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /stats/summary:
+    get:
+      tags: [Stats]
+      summary: Agregované počty spustení per typ simulácie.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StatsSummaryResponse' }
+  /stats/detail/{anim}:
+    get:
+      tags: [Stats]
+      summary: Detailné záznamy pre konkrétny typ simulácie.
+      parameters:
+        - in: path
+          name: anim
+          required: true
+          schema: { type: string, enum: [ball, pendulum] }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StatsDetailResponse' }
+        '404':
+          description: Neznámy typ animácie.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
