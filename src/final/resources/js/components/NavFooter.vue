@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -15,6 +16,8 @@ type Props = {
 };
 
 defineProps<Props>();
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -34,7 +37,7 @@ defineProps<Props>();
                             rel="noopener noreferrer"
                         >
                             <component :is="item.icon" />
-                            <span>{{ item.title }}</span>
+                            <span>{{ t(item.title) }}</span>
                         </a>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

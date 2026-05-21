@@ -24,21 +24,21 @@ import {
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
-    { title: 'Console', href: '/console', icon: Terminal },
-    { title: 'Pendulum', href: '/pendulum', icon: Move3d },
-    { title: 'Ball & Beam', href: '/ball-beam', icon: Waves },
-    { title: 'Stats', href: '/stats', icon: ScrollText },
-    { title: 'API Docs', href: '/api-docs', icon: FileCode2 },
+    { title: 'nav.console', href: '/console', icon: Terminal },
+    { title: 'nav.pendulum', href: '/pendulum', icon: Move3d },
+    { title: 'nav.ballBeam', href: '/ball-beam', icon: Waves },
+    { title: 'nav.stats', href: '/stats', icon: ScrollText },
+    { title: 'nav.apiDocs', href: '/api-docs', icon: FileCode2 },
 ];
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
+        title: 'nav.repository',
         href: 'https://github.com/laravel/vue-starter-kit',
         icon: FolderGit2,
     },
     {
-        title: 'Documentation',
+        title: 'nav.documentation',
         href: 'https://laravel.com/docs/starter-kits#vue',
         icon: BookOpen,
     },

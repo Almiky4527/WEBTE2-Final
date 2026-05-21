@@ -2,6 +2,7 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { initializeTheme } from '@/composables/useAppearance';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { initializeFlashToast } from '@/lib/flashToast';
+import { i18n } from '@/i18n';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -11,7 +12,14 @@ createInertiaApp({
     progress: {
         color: '#4B5563',
     },
+    withApp: (app) => {
+        app.use(i18n);
+    },
 });
+
+if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('lang', i18n.global.locale.value);
+}
 
 // This will set light / dark mode on page load...
 initializeTheme();

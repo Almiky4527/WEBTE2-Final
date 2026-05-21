@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 </script>
 
 <template>
-    <Head title="Stats" />
+    <Head :title="t('pages.stats.title')" />
     <div class="flex h-full flex-1 flex-col gap-4 p-4">
-        <h1 class="text-2xl font-semibold">Stats</h1>
-        <p class="text-muted-foreground">Animation usage statistics.</p>
+        <h1 class="text-2xl font-semibold">{{ t('pages.stats.title') }}</h1>
+        <p class="text-muted-foreground">{{ t('pages.stats.description') }}</p>
     </div>
 </template>
