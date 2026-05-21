@@ -6,8 +6,12 @@ export type Locale = (typeof SUPPORTED_LOCALES)[number];
 const STORAGE_KEY = 'locale';
 
 function readStoredLocale(): Locale {
-    if (typeof window === 'undefined') return 'sk';
+    if (typeof window === 'undefined') {
+return 'sk';
+}
+
     const stored = window.localStorage.getItem(STORAGE_KEY);
+
     return (SUPPORTED_LOCALES as readonly string[]).includes(stored ?? '') ? (stored as Locale) : 'sk';
 }
 
@@ -18,6 +22,41 @@ const messages = {
             language: 'Jazyk',
             slovak: 'Slovenčina',
             english: 'Angličtina',
+            save: 'Uložiť',
+            cancel: 'Zrušiť',
+        },
+        octave: {
+            unlockDialog: {
+                title: 'Odomknúť konzolu',
+                description: 'Zadajte heslo. Pri zhode server odomkne konzolu v rámci tejto session.',
+                placeholder: 'Heslo',
+                submit: 'Odomknúť',
+                checking: 'Overuje sa…',
+                invalid: 'Nesprávne heslo.',
+            },
+            editor: {
+                run: 'Spustiť',
+                running: 'Spúšťa sa…',
+                clear: 'Vyčistiť editor',
+                hint: 'Ctrl+Enter na spustenie',
+            },
+            output: {
+                title: 'Výstup',
+                clear: 'Vyčistiť históriu',
+                empty: 'Ešte neboli spustené žiadne príkazy.',
+                figureAlt: 'Vygenerovaný graf',
+            },
+            workspace: {
+                title: 'Workspace',
+                reset: 'Reset',
+                empty: 'Workspace je prázdny.',
+                more: '… (+{n} ďalších)',
+            },
+            errors: {
+                forbidden: 'Detegovaný zakázaný príkaz.',
+                invalidWorkspace: 'Workspace bol poškodený a bol resetovaný.',
+                server: 'Chyba servera.',
+            },
         },
         nav: {
             platform: 'Platforma',
@@ -72,6 +111,41 @@ const messages = {
             language: 'Language',
             slovak: 'Slovak',
             english: 'English',
+            save: 'Save',
+            cancel: 'Cancel',
+        },
+        octave: {
+            unlockDialog: {
+                title: 'Unlock console',
+                description: 'Enter the password. On match the server unlocks the console for this session.',
+                placeholder: 'Password',
+                submit: 'Unlock',
+                checking: 'Checking…',
+                invalid: 'Invalid password.',
+            },
+            editor: {
+                run: 'Run',
+                running: 'Running…',
+                clear: 'Clear editor',
+                hint: 'Ctrl+Enter to run',
+            },
+            output: {
+                title: 'Output',
+                clear: 'Clear history',
+                empty: 'No commands run yet.',
+                figureAlt: 'Generated plot',
+            },
+            workspace: {
+                title: 'Workspace',
+                reset: 'Reset',
+                empty: 'Workspace is empty.',
+                more: '… (+{n} more)',
+            },
+            errors: {
+                forbidden: 'Forbidden command detected.',
+                invalidWorkspace: 'Workspace was corrupted and has been reset.',
+                server: 'Server error.',
+            },
         },
         nav: {
             platform: 'Platform',
@@ -131,6 +205,7 @@ export const i18n = createI18n({
 
 export function setLocale(locale: Locale): void {
     i18n.global.locale.value = locale;
+
     if (typeof window !== 'undefined') {
         window.localStorage.setItem(STORAGE_KEY, locale);
         document.documentElement.setAttribute('lang', locale);
