@@ -4,7 +4,7 @@ import { i18n } from '@/i18n';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { initializeFlashToast } from '@/lib/flashToast';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'WEBTE2 CAS';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),

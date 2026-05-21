@@ -34,12 +34,12 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [
     {
         title: 'nav.repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
+        href: 'https://github.com/Almiky4527/WEBTE2-Final',
         icon: FolderGit2,
     },
     {
         title: 'nav.documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
+        href: 'https://github.com/Almiky4527/WEBTE2-Final/blob/main/README.md',
         icon: BookOpen,
     },
 ];

@@ -117,6 +117,7 @@ const messages = {
                 position: 'Pozícia guľôčky [m]',
                 beamAngle: 'Uhol tyče [rad]',
             },
+            lockedHint: 'Pre spustenie simulácie odomknite aplikáciu.',
         },
         nav: {
             platform: 'Platforma',
@@ -269,6 +270,7 @@ const messages = {
                 position: 'Ball position [m]',
                 beamAngle: 'Beam angle [rad]',
             },
+            lockedHint: 'Unlock the app to run a simulation.',
         },
         nav: {
             platform: 'Platform',

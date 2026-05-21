@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAnimSim } from '@/composables/useAnimSim'
+import { useOctaveUnlock } from '@/composables/useOctaveUnlock'
+import { Lock } from 'lucide-vue-next'
 
 const { t } = useI18n()
 
@@ -26,6 +28,7 @@ const params = reactive({
 })
 
 const { run, loading, series, errorMsg, clearSeries } = useAnimSim('/api/octave/ball')
+const { unlocked } = useOctaveUnlock()
 const unlockOpen = ref(false)
 let pendingSubmit = false
 
@@ -200,7 +203,10 @@ const idx = computed(() => {
         </header>
 
         <div class="grid flex-1 grid-cols-1 gap-4 lg:grid-cols-3">
-            <form class="flex flex-col gap-3 rounded-md border border-border p-3 lg:col-span-1"
+            <div class="relative lg:col-span-1">
+            <form class="flex flex-col gap-3 rounded-md border border-border p-3"
+                  :class="!unlocked ? 'pointer-events-none select-none opacity-30 blur-[1px]' : ''"
+                  :inert="!unlocked || undefined"
                   @submit.prevent="onSubmit">
                 <h2 class="text-sm font-semibold">{{ t('anim.parameters') }}</h2>
                 <div class="grid grid-cols-2 gap-2">
@@ -246,11 +252,19 @@ const idx = computed(() => {
                     </div>
                 </div>
 
-                <Button type="submit" :disabled="loading">
+                <Button type="submit" :disabled="loading || !unlocked">
                     {{ loading ? t('anim.running') : t('anim.simulate') }}
                 </Button>
                 <p v-if="errorMsg" class="text-sm text-destructive">{{ errorMsg }}</p>
             </form>
+            <div
+                v-if="!unlocked"
+                class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-md bg-background/40 backdrop-blur-[2px]"
+            >
+                <Lock class="h-10 w-10 text-muted-foreground" />
+                <p class="text-sm text-muted-foreground">{{ t('anim.lockedHint') }}</p>
+            </div>
+            </div>
 
             <div class="flex flex-col gap-3 lg:col-span-2">
                 <BallBeamScene

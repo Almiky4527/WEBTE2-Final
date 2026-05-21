@@ -1,7 +1,7 @@
 import { useSessionStorage } from '@vueuse/core'
 
 // UI-only flag indicating the backend session is unlocked. The actual auth
-// lives in an httpOnly Laravel session cookie that JS cannot read.
+// lives in an httpOnly session cookie that JS cannot read.
 // A 401 from the backend invalidates this flag.
 const unlocked = useSessionStorage<boolean>('octave_unlocked', false)
 
