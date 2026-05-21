@@ -15,6 +15,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Octave Console unlock password
+    |--------------------------------------------------------------------------
+    |
+    | User-facing password gating the Octave console. On match the backend
+    | flips a session flag (httpOnly cookie); the real api_token never leaves
+    | the server.
+    |
+    */
+
+    'unlock_password' => env('OCTAVE_UNLOCK_PASSWORD', '1111'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Octave Command Process Sleep Timeout
     |--------------------------------------------------------------------------
     |

@@ -1,8 +1,8 @@
 import { createInertiaApp } from '@inertiajs/vue3';
 import { initializeTheme } from '@/composables/useAppearance';
+import { i18n } from '@/i18n';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { initializeFlashToast } from '@/lib/flashToast';
-import { i18n } from '@/i18n';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

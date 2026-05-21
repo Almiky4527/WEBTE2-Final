@@ -2,7 +2,8 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Button } from '@/components/ui/button';
-import { setLocale, type Locale } from '@/i18n';
+import { setLocale  } from '@/i18n';
+import type {Locale} from '@/i18n';
 
 const { locale, t } = useI18n();
 

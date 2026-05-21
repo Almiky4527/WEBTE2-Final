@@ -28,8 +28,8 @@ class LogOctaveApi
     public function handle(Request $request, Closure $next): Response
     {
         $fields = $request->validate([
-            'token' => 'required|string|max:256',
-            'code' => 'required|string|max:5000',
+            'code'      => 'required|string|max:5000',
+            'workspace' => 'nullable|string|max:1048576',
         ]);
         $code = $fields['code'];
         
@@ -39,9 +39,9 @@ class LogOctaveApi
             $content = $this->get_response_content($response);
 
             OctaveLog::create([
-                'code' => $code,
+                'code' => mb_substr($code, 0, 5000),
                 'success' => $content['success'],
-                'error' => $content['stderr'],
+                'error' => mb_substr((string) ($content['stderr'] ?? ''), 0, 250),
             ]);
         }
 
