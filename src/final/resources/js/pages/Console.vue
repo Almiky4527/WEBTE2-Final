@@ -9,6 +9,10 @@ import UnlockDialog from '@/components/octave/UnlockDialog.vue'
 import WorkspacePanel from '@/components/octave/WorkspacePanel.vue'
 import { Button } from '@/components/ui/button'
 import { useOctaveEval } from '@/composables/useOctaveEval'
+import { useOctaveUnlock } from '@/composables/useOctaveUnlock'
+import { Lock } from 'lucide-vue-next'
+
+const { unlocked } = useOctaveUnlock()
 
 const { t } = useI18n()
 
@@ -89,31 +93,50 @@ function onClearEditor() {
 
 <template>
     <Head :title="t('pages.console.title')" />
-    <div class="flex h-full flex-1 flex-col gap-4 p-4">
+    <div class="flex h-full flex-1 flex-col gap-6 p-4 lg:p-6">
         <header>
-            <h1 class="text-2xl font-semibold">{{ t('pages.console.title') }}</h1>
-            <p class="text-muted-foreground">{{ t('pages.console.description') }}</p>
+            <p class="mb-1 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                {{ t('pages.welcome.brand') }}
+            </p>
+            <h1 class="text-3xl font-semibold tracking-tight">{{ t('pages.console.title') }}</h1>
+            <p class="mt-1 text-muted-foreground">{{ t('pages.console.description') }}</p>
         </header>
 
-        <div class="grid flex-1 grid-cols-1 gap-4 lg:grid-cols-3">
-            <div class="flex flex-col gap-2 lg:col-span-2">
-                <OctaveEditor v-model="code" :disabled="loading" @run="onRun" />
-                <div class="flex flex-wrap items-center gap-2">
-                    <Button :disabled="loading || !code.trim()" @click="onRun">
-                        {{ loading ? t('octave.editor.running') : t('octave.editor.run') }}
-                    </Button>
-                    <Button variant="outline" :disabled="!code" @click="onClearEditor">
-                        {{ t('octave.editor.clear') }}
-                    </Button>
-                    <span class="text-xs text-muted-foreground">{{ t('octave.editor.hint') }}</span>
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-[3fr_2fr]">
+            <div class="relative">
+                <section
+                    class="flex flex-col gap-3 rounded-lg border border-border bg-card p-4 shadow-sm"
+                    :class="!unlocked ? 'pointer-events-none select-none opacity-30 blur-[1px]' : ''"
+                    :inert="!unlocked || undefined"
+                >
+                    <OctaveEditor v-model="code" :disabled="loading" @run="onRun" />
+                    <div class="flex flex-wrap items-center gap-2">
+                        <Button :disabled="loading || !code.trim()" @click="onRun">
+                            {{ loading ? t('octave.editor.running') : t('octave.editor.run') }}
+                        </Button>
+                        <Button variant="secondary" :disabled="!code" @click="onClearEditor">
+                            {{ t('octave.editor.clear') }}
+                        </Button>
+                        <span class="text-xs text-muted-foreground">{{ t('octave.editor.hint') }}</span>
+                    </div>
+                </section>
+                <div
+                    v-if="!unlocked"
+                    class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-md bg-background/40 backdrop-blur-[2px]"
+                >
+                    <Lock class="h-10 w-10 text-muted-foreground" />
+                    <p class="text-sm text-muted-foreground">{{ t('octave.lockedHint') }}</p>
                 </div>
-                <OutputPanel :entries="entries" @clear="onClearHistory" />
             </div>
 
-            <aside class="flex flex-col gap-2">
+            <aside class="rounded-lg border border-border bg-card p-4 shadow-sm">
                 <WorkspacePanel />
             </aside>
         </div>
+
+        <section class="rounded-lg border border-border bg-card p-4 shadow-sm">
+            <OutputPanel :entries="entries" @clear="onClearHistory" />
+        </section>
 
         <UnlockDialog
             v-model:open="unlockDialogOpen"

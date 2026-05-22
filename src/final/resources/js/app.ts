@@ -10,7 +10,7 @@ createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => (name === 'Welcome' ? null : AppLayout),
     progress: {
-        color: '#4B5563',
+        color: 'hsl(220, 15%, 60%)',
     },
     withApp: (app) => {
         app.use(i18n);

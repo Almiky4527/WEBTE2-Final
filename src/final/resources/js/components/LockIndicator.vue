@@ -49,7 +49,7 @@ async function onClick() {
         :title="title"
         @click="onClick"
     >
-        <LockOpen v-if="unlocked" class="h-4 w-4 text-emerald-500" />
+        <LockOpen v-if="unlocked" class="h-4 w-4 text-accent" />
         <Lock v-else class="h-4 w-4 text-muted-foreground" />
     </Button>
     <UnlockDialog v-model:open="dialogOpen" />

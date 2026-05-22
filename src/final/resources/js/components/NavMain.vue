@@ -28,6 +28,11 @@ const { t } = useI18n();
                     as-child
                     :is-active="isCurrentUrl(item.href)"
                     :tooltip="t(item.title)"
+                    :class="
+                        isCurrentUrl(item.href)
+                            ? 'border-l-2 border-accent font-semibold ring-1 ring-accent/40'
+                            : ''
+                    "
                 >
                     <Link :href="item.href">
                         <component :is="item.icon" />

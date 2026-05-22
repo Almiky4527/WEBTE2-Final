@@ -175,10 +175,13 @@ onMounted(async () => {
 
 <template>
     <Head :title="t('pages.stats.title')" />
-    <div class="flex h-full flex-1 flex-col gap-6 p-4">
+    <div class="flex h-full flex-1 flex-col gap-6 p-4 lg:p-6">
         <header>
-            <h1 class="text-2xl font-semibold">{{ t('pages.stats.title') }}</h1>
-            <p class="text-muted-foreground">{{ t('pages.stats.description') }}</p>
+            <p class="mb-1 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                {{ t('pages.welcome.brand') }}
+            </p>
+            <h1 class="text-3xl font-semibold tracking-tight">{{ t('pages.stats.title') }}</h1>
+            <p class="mt-1 text-muted-foreground">{{ t('pages.stats.description') }}</p>
         </header>
 
         <section class="flex flex-col gap-3">
@@ -190,7 +193,7 @@ onMounted(async () => {
                     v-for="item in summary"
                     :key="item.anim"
                     class="cursor-pointer transition-colors hover:bg-muted/40"
-                    :class="{ 'ring-2 ring-ring': openAnim === item.anim }"
+                    :class="{ 'border-t-2 border-t-accent ring-1 ring-accent/40': openAnim === item.anim }"
                     @click="toggleDetail(item.anim)"
                 >
                     <CardHeader>
@@ -239,7 +242,7 @@ onMounted(async () => {
             </div>
             <p class="text-sm text-muted-foreground">{{ t('stats.logs.description') }}</p>
 
-            <div class="relative rounded-md border border-border">
+            <div class="relative rounded-lg border border-border border-t-2 border-t-accent bg-card shadow-sm">
                 <div :class="['overflow-x-auto', !unlocked ? 'pointer-events-none select-none opacity-30 blur-[1px]' : '']">
                     <table class="w-full text-sm">
                         <thead class="text-left text-muted-foreground">
@@ -268,7 +271,7 @@ onMounted(async () => {
                                     <td class="px-2 py-1 font-mono text-xs whitespace-nowrap">{{ formatDate(row.created_at) }}</td>
                                     <td class="px-2 py-1 font-mono text-xs whitespace-pre-wrap break-all">{{ row.code }}</td>
                                     <td class="px-2 py-1">
-                                        <span :class="row.success ? 'text-emerald-500' : 'text-destructive'">
+                                        <span :class="row.success ? 'text-accent' : 'text-destructive'">
                                             {{ row.success ? '✓' : '✗' }}
                                         </span>
                                     </td>

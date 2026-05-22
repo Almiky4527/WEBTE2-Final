@@ -24,7 +24,7 @@ withDefaults(
             <template v-if="breadcrumbs && breadcrumbs.length > 0">
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
             </template>
-            <div class="ml-auto flex items-center gap-1">
+            <div class="ml-auto flex items-center gap-2 rounded-md border border-border/60 bg-card/60 px-2 py-1">
                 <LockIndicator />
                 <LocaleSwitcher />
             </div>

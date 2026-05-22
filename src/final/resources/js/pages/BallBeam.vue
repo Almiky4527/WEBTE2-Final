@@ -80,8 +80,8 @@ return []
 }
 
     return [
-        { label: t('anim.ball.position'), color: '#3b82f6', values: ballPositions.value },
-        { label: t('anim.ball.beamAngle'), color: '#ef4444', values: beamAngles.value },
+        { label: t('anim.ball.position'), color: 'hsl(220 15% 50%)', values: ballPositions.value },
+        { label: t('anim.ball.beamAngle'), color: 'hsl(210 40% 65%)', values: beamAngles.value },
     ]
 })
 
@@ -196,15 +196,18 @@ const idx = computed(() => {
 
 <template>
     <Head :title="t('pages.ballBeam.title')" />
-    <div class="flex h-full flex-1 flex-col gap-4 p-4">
+    <div class="flex h-full flex-1 flex-col gap-6 p-4 lg:p-6">
         <header>
-            <h1 class="text-2xl font-semibold">{{ t('pages.ballBeam.title') }}</h1>
-            <p class="text-muted-foreground">{{ t('pages.ballBeam.description') }}</p>
+            <p class="mb-1 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                {{ t('pages.welcome.brand') }}
+            </p>
+            <h1 class="text-3xl font-semibold tracking-tight">{{ t('pages.ballBeam.title') }}</h1>
+            <p class="mt-1 text-muted-foreground">{{ t('pages.ballBeam.description') }}</p>
         </header>
 
         <div class="grid flex-1 grid-cols-1 gap-4 lg:grid-cols-3">
             <div class="relative lg:col-span-1">
-            <form class="flex flex-col gap-3 rounded-md border border-border p-3"
+            <form class="flex flex-col gap-3 rounded-lg border border-border bg-card p-4 shadow-sm"
                   :class="!unlocked ? 'pointer-events-none select-none opacity-30 blur-[1px]' : ''"
                   :inert="!unlocked || undefined"
                   @submit.prevent="onSubmit">
@@ -267,12 +270,14 @@ const idx = computed(() => {
             </div>
 
             <div class="flex flex-col gap-3 lg:col-span-2">
+                <div class="rounded-lg border border-border border-t-2 border-t-accent bg-card p-3 shadow-sm">
                 <BallBeamScene
                     :ball-pos="ballPositions[idx] ?? params.pos0"
                     :beam-angle="beamAngles[idx] ?? params.angle0"
                     :ref-target="params.r"
                     :pos-range="ballPosRange"
                 />
+                </div>
                 <PlaybackControls
                     :playing="playing"
                     :current-index="idx"
@@ -284,7 +289,7 @@ const idx = computed(() => {
                     @seek="seek"
                     @speed="setSpeed"
                 />
-                <div v-if="series" class="rounded-md border border-border p-2">
+                <div v-if="series" class="rounded-lg border border-border border-t-2 border-t-accent bg-card p-3 shadow-sm">
                     <TimeChart :t="series.t" :series="chartSeries" :current-index="idx" />
                 </div>
                 <p v-else class="text-sm text-muted-foreground">{{ t('anim.noData') }}</p>

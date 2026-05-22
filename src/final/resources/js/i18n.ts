@@ -67,8 +67,8 @@ const messages = {
                 unlocked: 'Aplikácia je odomknutá — kliknite pre zamknutie',
             },
             unlockDialog: {
-                title: 'Odomknúť konzolu',
-                description: 'Zadajte heslo. Pri zhode server odomkne konzolu v rámci tejto session.',
+                title: 'Odomknúť aplikáciu',
+                description: 'Zadajte heslo. Pri zhode server odomkne aplikáciu (konzolu, simulácie aj záznamy) v rámci tejto session.',
                 placeholder: 'Heslo',
                 submit: 'Odomknúť',
                 checking: 'Overuje sa…',
@@ -80,6 +80,7 @@ const messages = {
                 clear: 'Vyčistiť editor',
                 hint: 'Ctrl+Enter na spustenie',
             },
+            lockedHint: 'Pre prácu s konzolou odomknite aplikáciu.',
             output: {
                 title: 'Výstup',
                 clear: 'Vyčistiť históriu',
@@ -157,7 +158,7 @@ const messages = {
                 brand: 'WEBTE2 — CAS Simulátor',
                 openApp: 'Otvoriť aplikáciu',
                 heading: 'Simulátor dynamických systémov',
-                lead: 'Obrátené kyvadlo a model gulička-tyč s konzolou pohanou CAS, štatistikami používania a OpenAPI dokumentáciou.',
+                lead: 'Obrátené kyvadlo a model gulička-tyč s konzolou poháňanou CAS, štatistikami používania a OpenAPI dokumentáciou.',
                 footer: 'WEBTE2 — záverečný projekt',
                 features: {
                     consoleDesc: 'Spustite CAS príkazy.',
@@ -220,8 +221,8 @@ const messages = {
                 unlocked: 'Application is unlocked — click to lock',
             },
             unlockDialog: {
-                title: 'Unlock console',
-                description: 'Enter the password. On match the server unlocks the console for this session.',
+                title: 'Unlock application',
+                description: 'Enter the password. On match the server unlocks the application (console, simulations and logs) for this session.',
                 placeholder: 'Password',
                 submit: 'Unlock',
                 checking: 'Checking…',
@@ -233,6 +234,7 @@ const messages = {
                 clear: 'Clear editor',
                 hint: 'Ctrl+Enter to run',
             },
+            lockedHint: 'Unlock the app to use the console.',
             output: {
                 title: 'Output',
                 clear: 'Clear history',

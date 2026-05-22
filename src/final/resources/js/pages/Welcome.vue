@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
+import LocaleSwitcher from '@/components/LocaleSwitcher.vue';
+import LockIndicator from '@/components/LockIndicator.vue';
 
 const { t } = useI18n();
 
@@ -18,25 +20,24 @@ const features = [
         <link rel="preconnect" href="https://rsms.me/" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     </Head>
-    <div class="flex min-h-screen flex-col bg-[#FDFDFC] p-6 text-[#1b1b18] lg:p-8 dark:bg-[#0a0a0a] dark:text-[#EDEDEC]">
-        <header class="mx-auto mb-12 flex w-full max-w-5xl items-center justify-between">
-            <div class="text-lg font-semibold">{{ t('pages.welcome.brand') }}</div>
-            <nav class="flex items-center gap-3 text-sm">
-                <Link
-                    href="/console"
-                    class="inline-block rounded-sm border border-[#19140035] px-4 py-1.5 hover:border-[#1915014a] dark:border-[#3E3E3A] dark:hover:border-[#62605b]"
-                >
-                    {{ t('pages.welcome.openApp') }}
-                </Link>
+    <div class="flex min-h-screen flex-col bg-background p-6 text-foreground lg:p-8">
+        <header class="mx-auto mb-16 flex w-full max-w-6xl items-center justify-between">
+            <div class="text-lg font-semibold text-chrome">{{ t('pages.welcome.brand') }}</div>
+            <nav class="flex items-center gap-2 rounded-md border border-border/60 bg-card/60 px-2 py-1 text-sm">
+                <LockIndicator />
+                <LocaleSwitcher />
             </nav>
         </header>
 
-        <main class="mx-auto w-full max-w-5xl flex-1">
-            <section class="mb-12">
-                <h1 class="mb-3 text-3xl font-semibold tracking-tight lg:text-4xl">
-                    {{ t('pages.welcome.heading') }}
+        <main class="mx-auto w-full max-w-6xl flex-1">
+            <section class="mb-16">
+                <p class="mb-4 text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">
+                    {{ t('pages.welcome.brand') }}
+                </p>
+                <h1 class="mb-5 text-5xl font-semibold tracking-tight lg:text-6xl">
+                    <span class="text-chrome">{{ t('pages.welcome.heading') }}</span>
                 </h1>
-                <p class="max-w-2xl text-[#706f6c] dark:text-[#A1A09A]">
+                <p class="max-w-2xl text-base text-muted-foreground lg:text-lg">
                     {{ t('pages.welcome.lead') }}
                 </p>
             </section>
@@ -46,19 +47,19 @@ const features = [
                     v-for="f in features"
                     :key="f.href"
                     :href="f.href"
-                    class="group rounded-lg border border-[#19140035] bg-white p-5 transition hover:border-[#1915014a] dark:border-[#3E3E3A] dark:bg-[#161615] dark:hover:border-[#62605b]"
+                    class="group rounded-lg border border-border bg-card p-6 transition hover:border-accent hover:ring-1 hover:ring-accent/30"
                 >
-                    <h2 class="mb-2 font-medium group-hover:text-[#f53003] dark:group-hover:text-[#FF4433]">
+                    <h2 class="mb-2 text-base font-medium text-card-foreground">
                         {{ t(f.titleKey) }}
                     </h2>
-                    <p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">
+                    <p class="text-sm text-muted-foreground">
                         {{ t(f.descKey) }}
                     </p>
                 </Link>
             </section>
         </main>
 
-        <footer class="mx-auto mt-12 w-full max-w-5xl text-xs text-[#706f6c] dark:text-[#A1A09A]">
+        <footer class="mx-auto mt-16 w-full max-w-6xl text-xs text-muted-foreground">
             {{ t('pages.welcome.footer') }}
         </footer>
     </div>
